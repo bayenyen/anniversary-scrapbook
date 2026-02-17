@@ -15,6 +15,7 @@ export default function ScrapbookEditorPage() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [letterContent, setLetterContent] = useState('');
   const [sharePassword, setSharePassword] = useState('');
+  const [passwordNotification, setPasswordNotification] = useState('');
 
   useEffect(() => {
     fetchScrapbookData();
@@ -85,6 +86,21 @@ export default function ScrapbookEditorPage() {
       setScrapbook({ ...scrapbook, isPublic: !scrapbook.isPublic });
     } catch (error) {
       console.error('Error updating scrapbook:', error);
+    }
+  };
+
+  const handleSavePassword = async () => {
+    try {
+      await api.put(`/scrapbooks/${id}`, {
+        isPublic: scrapbook.isPublic,
+        accessPassword: sharePassword || null,
+      });
+      setPasswordNotification('✅ Password successfully set!');
+      setTimeout(() => setPasswordNotification(''), 3000);
+    } catch (error) {
+      console.error('Error saving password:', error);
+      setPasswordNotification('❌ Failed to save password');
+      setTimeout(() => setPasswordNotification(''), 3000);
     }
   };
 
@@ -370,7 +386,7 @@ export default function ScrapbookEditorPage() {
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-3">Password Protection (Optional)</h4>
                   <p className="text-sm text-gray-600 mb-3">Set a password to require access to your scrapbook</p>
-                  <div>
+                  <div className="space-y-3">
                     <input
                       type="password"
                       value={sharePassword}
@@ -378,6 +394,29 @@ export default function ScrapbookEditorPage() {
                       placeholder="Enter password (leave blank for no password)"
                       className="w-full px-4 py-2 rounded-lg border border-rose-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 outline-none"
                     />
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      type="button"
+                      onClick={handleSavePassword}
+                      className="w-full px-4 py-2 bg-gradient-to-r from-rose-400 to-rose-500 text-white rounded-lg font-semibold hover:shadow-lg transition"
+                    >
+                      {sharePassword ? '🔒 Set Password' : '🔓 Remove Password'}
+                    </motion.button>
+                    {passwordNotification && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className={`text-center py-2 rounded-lg font-semibold ${
+                          passwordNotification.includes('✅')
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-700'
+                        }`}
+                      >
+                        {passwordNotification}
+                      </motion.div>
+                    )}
                   </div>
                 </div>
 
