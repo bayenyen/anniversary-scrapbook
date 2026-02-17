@@ -4,7 +4,7 @@ import Scrapbook from '../models/Scrapbook.js';
 export const addMemory = async (req, res, next) => {
   try {
     const { scrapbookId, caption, date, location, mood } = req.body;
-    const image = req.file ? `uploads/memories/${req.file.filename}` : req.body.image;
+    const image = req.file?.path || req.body.image; // Use Cloudinary URL from req.file.path
 
     if (!scrapbookId || !image || !date) {
       return res.status(400).json({ message: 'Scrapbook ID, image, and date are required' });

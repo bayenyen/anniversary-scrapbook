@@ -274,7 +274,7 @@ export default function ScrapbookEditorPage() {
                     >
                       <div className="h-48 bg-gray-200 overflow-hidden">
                         <img
-                          src={`https://anniversary-scrapbook.onrender.com/${memory.image}`}
+                          src={memory.image}
                           alt={memory.caption}
                           className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                         />
