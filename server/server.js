@@ -25,16 +25,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // CORS Configuration - Allow both development and production
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://anniversary-scrapbook-eight.vercel.app',
-  process.env.FRONTEND_URL
-].filter(Boolean);
-
-app.use(cors({
-  origin: allowedOrigins,
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow localhost for development
+    if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      return callback(null, true);
+    }
+    // Allow all Vercel deployments
+    if (origin.includes('vercel.app')) {
+      return callback(null, true);
+    }
+    // Allow custom domains if specified in env
+    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
+      return callback(null, true);
+    }
+    callback(null, true); // Allow all for now
+  },
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
