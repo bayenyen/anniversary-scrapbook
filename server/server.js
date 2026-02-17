@@ -23,8 +23,16 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// CORS Configuration - Allow both development and production
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://anniversary-scrapbook-eight.vercel.app',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.VITE_API_URL || 'http://localhost:5173',
+  origin: allowedOrigins,
   credentials: true,
 }));
 
