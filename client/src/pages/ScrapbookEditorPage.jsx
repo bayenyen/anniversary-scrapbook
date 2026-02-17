@@ -39,6 +39,7 @@ export default function ScrapbookEditorPage() {
   const handleAddMemory = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    formData.append('scrapbookId', id); // Add the scrapbook ID
     try {
       const response = await api.post('/memories', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -47,6 +48,7 @@ export default function ScrapbookEditorPage() {
       e.target.reset();
     } catch (error) {
       console.error('Error adding memory:', error);
+      alert('Failed to add memory. Please try again.');
     }
   };
 
