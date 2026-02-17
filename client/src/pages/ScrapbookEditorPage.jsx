@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, ArrowLeft, Plus, Share2, Lock } from 'lucide-react';
+import { Heart, ArrowLeft, Plus, Share2, Lock, Eye, EyeOff } from 'lucide-react';
 import api from '../services/api';
 
 export default function ScrapbookEditorPage() {
@@ -16,6 +16,7 @@ export default function ScrapbookEditorPage() {
   const [letterContent, setLetterContent] = useState('');
   const [sharePassword, setSharePassword] = useState('');
   const [passwordNotification, setPasswordNotification] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     fetchScrapbookData();
@@ -387,13 +388,22 @@ export default function ScrapbookEditorPage() {
                   <h4 className="font-semibold text-gray-700 mb-3">Password Protection (Optional)</h4>
                   <p className="text-sm text-gray-600 mb-3">Set a password to require access to your scrapbook</p>
                   <div className="space-y-3">
-                    <input
-                      type="password"
-                      value={sharePassword}
-                      onChange={(e) => setSharePassword(e.target.value)}
-                      placeholder="Enter password (leave blank for no password)"
-                      className="w-full px-4 py-2 rounded-lg border border-rose-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 outline-none"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={sharePassword}
+                        onChange={(e) => setSharePassword(e.target.value)}
+                        placeholder="Enter password (leave blank for no password)"
+                        className="w-full px-4 py-2 pr-10 rounded-lg border border-rose-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
