@@ -162,7 +162,7 @@ export default function PublicScrapbookPage() {
                 >
                   <div className="h-48 bg-gray-200 overflow-hidden">
                     <img
-                      src={`http://localhost:5000/${memory.image}`}
+                      src={`https://anniversary-scrapbook.onrender.com/${memory.image}`}
                       alt={memory.caption}
                       className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                     />
